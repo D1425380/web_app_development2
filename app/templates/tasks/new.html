@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}新增任務 - 任務管理系統{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-primary text-white">
+                <h4 class="mb-0">建立新任務</h4>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('task.add_task') }}" method="POST">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">任務標題 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="title" name="title" required placeholder="例如：完成週報">
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">詳細描述</label>
+                        <textarea class="form-control" id="description" name="description" rows="3" placeholder="描述任務的具體內容..."></textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="priority" class="form-label">優先級</label>
+                            <select class="form-select" id="priority" name="priority">
+                                <option value="低">低</option>
+                                <option value="中" selected>中</option>
+                                <option value="高">高</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="due_date" class="form-label">截止日期</label>
+                            <input type="date" class="form-control" id="due_date" name="due_date">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="assigned_to" class="form-label">分配給</label>
+                        <select class="form-select" id="assigned_to" name="assigned_to">
+                            <option value="">-- 未分配 --</option>
+                            {% for user in users %}
+                                <option value="{{ user.id }}">{{ user.username }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('main.index') }}" class="btn btn-secondary me-md-2">取消</a>
+                        <button type="submit" class="btn btn-primary">建立任務</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

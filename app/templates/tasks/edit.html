@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+
+{% block title %}編輯任務 - 任務管理系統{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card shadow-sm">
+            <div class="card-header bg-warning text-dark">
+                <h4 class="mb-0">編輯任務：{{ task.title }}</h4>
+            </div>
+            <div class="card-body">
+                <form action="{{ url_for('task.update_task', id=task.id) }}" method="POST">
+                    <div class="mb-3">
+                        <label for="title" class="form-label">任務標題 <span class="text-danger">*</span></label>
+                        <input type="text" class="form-control" id="title" name="title" value="{{ task.title }}" required>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <label for="description" class="form-label">詳細描述</label>
+                        <textarea class="form-control" id="description" name="description" rows="3">{{ task.description }}</textarea>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="status" class="form-label">狀態</label>
+                            <select class="form-select" id="status" name="status">
+                                <option value="待處理" {% if task.status == '待處理' %}selected{% endif %}>待處理</option>
+                                <option value="進行中" {% if task.status == '進行中' %}selected{% endif %}>進行中</option>
+                                <option value="已完成" {% if task.status == '已完成' %}selected{% endif %}>已完成</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="priority" class="form-label">優先級</label>
+                            <select class="form-select" id="priority" name="priority">
+                                <option value="低" {% if task.priority == '低' %}selected{% endif %}>低</option>
+                                <option value="中" {% if task.priority == '中' %}selected{% endif %}>中</option>
+                                <option value="高" {% if task.priority == '高' %}selected{% endif %}>高</option>
+                            </select>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label for="due_date" class="form-label">截止日期</label>
+                            <input type="date" class="form-control" id="due_date" name="due_date" value="{{ task.due_date }}">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="assigned_to" class="form-label">分配給</label>
+                        <select class="form-select" id="assigned_to" name="assigned_to">
+                            <option value="">-- 未分配 --</option>
+                            {% for user in users %}
+                                <option value="{{ user.id }}" {% if task.assigned_to == user.id %}selected{% endif %}>
+                                    {{ user.username }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('task.task_detail', id=task.id) }}" class="btn btn-secondary me-md-2">取消</a>
+                        <button type="submit" class="btn btn-warning">儲存變更</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

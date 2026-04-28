@@ -3,30 +3,61 @@
 {% block title %}首頁 - 任務管理系統{% endblock %}
 
 {% block content %}
-<div class="p-5 mb-4 bg-light rounded-3">
-    <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">歡迎使用任務管理系統</h1>
-        <p class="col-md-8 fs-4">這是一個簡單且高效的任務管理工具，幫助您追蹤日常工作進度。</p>
-        <hr class="my-4">
-        <p>點擊下方按鈕開始管理您的任務。</p>
-        <a href="{{ url_for('task.index') }}" class="btn btn-primary btn-lg" type="button">查看任務列表</a>
+<div class="row mb-4 align-items-center">
+    <div class="col">
+        <h1 class="fw-bold mb-0">任務列表</h1>
+    </div>
+    <div class="col-auto">
+        <a href="{{ url_for('task.new_task') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> 新增任務
+        </a>
     </div>
 </div>
 
-<div class="row align-items-md-stretch">
-    <div class="col-md-6">
-        <div class="h-100 p-5 text-white bg-dark rounded-3">
-            <h2>快速新增</h2>
-            <p>隨時隨地紀錄您的新想法與任務。</p>
-            <a href="{{ url_for('task.create') }}" class="btn btn-outline-light">新增任務</a>
+<div class="row">
+    {% if tasks %}
+        {% for task in tasks %}
+            <div class="col-md-6 col-lg-4 mb-4">
+                <div class="card h-100 shadow-sm border-0">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="card-title fw-bold mb-0">
+                                <a href="{{ url_for('task.task_detail', id=task.id) }}" class="text-decoration-none text-dark">
+                                    {{ task.title }}
+                                </a>
+                            </h5>
+                            <span class="badge {% if task.status == '已完成' %}bg-success{% elif task.status == '進行中' %}bg-primary{% else %}bg-secondary{% endif %}">
+                                {{ task.status }}
+                            </span>
+                        </div>
+                        <p class="card-text text-muted text-truncate mb-3">
+                            {{ task.description if task.description else '目前沒有描述。' }}
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted">
+                                <i class="bi bi-person"></i> {{ task.assignee_name if task.assignee_name else '未分配' }}
+                            </small>
+                            <span class="badge rounded-pill {% if task.priority == '高' %}bg-danger{% elif task.priority == '中' %}bg-warning text-dark{% else %}bg-info text-dark{% endif %}">
+                                {{ task.priority }}
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 pt-0 pb-3">
+                        <div class="d-grid">
+                            <a href="{{ url_for('task.task_detail', id=task.id) }}" class="btn btn-sm btn-outline-primary">詳情</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <div class="col-12 text-center py-5">
+            <div class="mb-3">
+                <i class="bi bi-inbox text-muted" style="font-size: 4rem;"></i>
+            </div>
+            <h3 class="text-muted">目前沒有任務</h3>
+            <p class="text-muted">點擊右上方按鈕開始建立您的第一個任務吧！</p>
         </div>
-    </div>
-    <div class="col-md-6">
-        <div class="h-100 p-5 bg-light border rounded-3">
-            <h2>系統說明</h2>
-            <p>本系統採用 Flask 開發，支援任務的新增、修改、刪除與狀態追蹤。</p>
-            <button class="btn btn-outline-secondary" type="button">了解更多</button>
-        </div>
-    </div>
+    {% endif %}
 </div>
 {% endblock %}

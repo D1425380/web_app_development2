@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request
 from app.models.task import Task
 
 main_bp = Blueprint('main', __name__)
@@ -10,4 +10,5 @@ def index():
     1. 呼叫 Task.get_all() 取得任務清單
     2. 渲染 index.html
     """
-    pass
+    tasks = Task.get_all()
+    return render_template('index.html', tasks=tasks)
